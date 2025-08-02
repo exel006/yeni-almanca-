@@ -253,3 +253,106 @@
 
   // Quiz
   function renderQuiz()
+  <div id="flashcard">
+  <div id="word">Kelime</div>
+  <button onclick="showMeaning()">Anlamı Göster</button>
+  <div id="meaning" style="display:none;"></div>
+</div>
+
+<script>
+const cards = [
+  { word: "Hello", meaning: "Merhaba" },
+  { word: "World", meaning: "Dünya" },
+  { word: "Book", meaning: "Kitap" },
+];
+
+let currentIndex = 0;
+
+function showCard(index) {
+  document.getElementById('word').innerText = cards[index].word;
+  document.getElementById('meaning').style.display = 'none';
+  document.getElementById('meaning').innerText = cards[index].meaning;
+}
+
+function showMeaning() {
+  document.getElementById('meaning').style.display = 'block';
+}
+
+function nextCard() {
+  currentIndex = (currentIndex + 1) % cards.length;
+  showCard(currentIndex);
+}
+
+showCard(currentIndex);
+</script>
+
+<button onclick="nextCard()">Sonraki Kart</button>
+<div id="quiz">
+  <div id="question"></div>
+  <div id="answers"></div>
+  <button onclick="nextQuestion()">Sonraki Soru</button>
+</div>
+
+<script>
+const quizData = [
+  {
+    question: "What is the past tense of 'go'?",
+    options: ["goed", "went", "gone", "goes"],
+    answer: "went"
+  },
+  {
+    question: "Which one is a noun?",
+    options: ["quickly", "happiness", "run", "blue"],
+    answer: "happiness"
+  }
+];
+
+let qIndex = 0;
+
+function showQuestion(index) {
+  const q = quizData[index];
+  document.getElementById('question').innerText = q.question;
+  const answersDiv = document.getElementById('answers');
+  answersDiv.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt);
+    answersDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected) {
+  if(selected === quizData[qIndex].answer) {
+    alert("Doğru!");
+  } else {
+    alert("Yanlış!");
+  }
+}
+
+function nextQuestion() {
+  qIndex = (qIndex + 1) % quizData.length;
+  showQuestion(qIndex);
+}
+
+showQuestion(qIndex);
+    </script>
+    function checkAnswer(selected) {
+  if(selected === quizData[qIndex].answer) {
+    alert("Doğru!");
+    let score = localStorage.getItem('score') || 0;
+    localStorage.setItem('score', Number(score) + 1);
+  } else {
+    alert("Yanlış!");
+  }
+}
+  <div>Doğru Sayısı: <span id="score"></span></div>
+
+<script>
+function updateScore() {
+  let score = localStorage.getItem('score') || 0;
+  document.getElementById('score').innerText = score;
+}
+
+updateScore();
+</script>

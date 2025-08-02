@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Almanca Öğrenme (A1 - C1 Full Paket)</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fafafa; margin: 0; padding: 20px; color: #222; }
+    h1,h2,h3 { color: #00509e; }
+    .container { max-width: 900px; background: white; margin: 20px auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1);}
+    button { background: #007bff; color: white; border: none; padding: 10px 18px; margin: 5px 5px 10px 0; border-radius: 5px; cursor: pointer; font-size: 14px;}
+    button:hover { background: #0056b3; }
+    .quiz-option { background: #e2e6ea; padding: 10px; margin: 6px 0; border-radius: 5px; cursor: pointer; font-weight: 600;}
+    .quiz-option:hover { background: #c7d1db; }
+    .hidden { display: none; }
+    .word-card { font-size: 24px; font-weight: 700; margin: 10px 0 6px 0; color: #00509e; }
+    .meaning { font-size: 18px; margin-bottom: 15px; color: #444; }
+    .grammar-section { margin-top: 10px; line-height: 1.6; font-size: 16px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🇩🇪 Almanca Öğrenme (A1 - C1 Full Paket)</h1>
+  <h2>Seviyeni Seç</h2>
+  <button onclick="selectLevel('A1')">A1</button>
+  <button onclick="selectLevel('A2')">A2</button>
+  <button onclick="selectLevel('B1')">B1</button>
+  <button onclick="selectLevel('B2')">B2</button>
+  <button onclick="selectLevel('C1')">C1</button>
+  <p><strong>Seçilen Seviye: </strong><span id="level">—</span></p>
+</div>
+
+<div class="container">
+  <h2>🔤 Kelime Kartları</h2>
+  <div class="word-card" id="word">Kelime burada</div>
+  <div class="meaning hidden" id="meaning">Anlamı burada</div>
+  <button onclick="showMeaning()">Anlamı Göster</button>
+  <button onclick="nextWord()">Sonraki Kelime</button>
+</div>
+
+<div class="container">
+  <h2>📘 Gramer Bilgisi ve Örnek Cümleler</h2>
+  <div id="grammarContent" class="grammar-section">Seviye seçiniz, gramer burada görünecek.</div>
+</div>
+
+<div class="container">
+  <h2>🧠 Quiz</h2>
+  <p id="quizQuestion">Soru burada</p>
+  <div id="quizOptions"></div>
+  <p>✅ Doğru: <span id="correct">0</span> | ❌ Yanlış: <span id="wrong">0</span></p>
+  <button onclick="nextQuiz()">Sonraki Soru</button>
+</div>
+
+<script>
+let level = null;
+let wIdx = 0, qIdx = 0, correct = 0, wrong = 0;
+
+// Kelime verisi (A1 örneği)
+const vocabulary = {
+  A1:[
+    {word:"sein", meaning:"olmak"},
+    {word:"haben", meaning:"sahip olmak"},
+    {word:"gehen", meaning:"gitmek"},
+    {word:"kommen", meaning:"gelmek"},
+    {word:"essen", meaning:"yemek"},
+    {word:"trinken", meaning:"içmek"},
+    {word:"Haus", meaning:"ev"},
+    {word:"Mann", meaning:"adam"},
+    {word:"Frau", meaning:"kadın"},
+    {word:"Kind", meaning:"çocuk"}
+  ],
+  // Diğer seviyeler için ekle...
+};
+
+// Basit gramer açıklamaları
+const grammar = {
+  A1: `A1 Gramer Notları:\n- Sein ve Haben fiilleri en temel fiillerdir.\n- Cümlede fiil ikinci sıradadır.\nÖrnek: Ich bin müde. (Ben yorgunum.)\n`,
+  A2: `A2 Gramer Notları:\n- Modal fiiller (können, müssen, wollen) kullanılır.\n- Geçmiş zaman (Perfekt) öğrenilir.\n`,
+  B1: `B1 Gramer Notları:\n- Konjunktiv II (şart kipleri) ve zamirler.\n- Yan cümle yapıları.\n`,
+  B2: `B2 Gramer Notları:\n- Pasif cümleler.\n- Dolaylı anlatım.\n`,
+  C1: `C1 Gramer Notları:\n- Karmaşık cümle yapıları.\n- İleri seviye bağlaçlar ve kelime bilgisi.\n`
+};
+
+// Quiz verisi (A1 örnek)
+const quizzes = {
+  A1:[
+    {q:"‘sein’ ne demektir?", options:["gitmek","olmak","yemek","çalışmak"], answer:"olmak"},
+    {q:"‘haben’ anlamı nedir?", options:["sahip olmak","gelmek","koşmak","dinlemek"], answer:"sahip olmak"},
+    {q:"‘Haus’ kelimesi ne demek?", options:["ev","araba","masa","kitap"], answer:"ev"},
+    {q:"‘Kind’ kelimesi hangi anlama gelir?", options:["çocuk","adam","kadın","öğrenci"], answer:"çocuk"},
+    {q:"‘gehen’ fiilinin anlamı nedir?", options:["gitmek","gelmek","yemek","çalışmak"], answer:"gitmek"}
+  ]
+  // Diğer seviyeler için ekle...
+};
+
+function selectLevel(lvl){
+  level = lvl;
+  wIdx = 0;
+  qIdx = 0;
+  correct = 0;
+  wrong = 0;
+  document.getElementById('level').textContent = level;
+  document.getElementById('correct').textContent = correct;
+  document.getElementById('wrong').textContent = wrong;
+  document.getElementById('meaning').classList.add('hidden');
+  showWord();
+  showGrammar();
+  showQuiz();
+}
+
+function showWord(){
+  if(!level) return;
+  const words = vocabulary[level];
+  if(!words || words.length===0) return;
+  if(wIdx >= words.length) wIdx = 0;
+  document.getElementById('word').textContent = words[wIdx].word;
+  document.getElementById('meaning').textContent = words[wIdx].meaning;
+  document.getElementById('meaning').classList.add('hidden');
+}
+
+function showMeaning(){
+  document.getElementById('meaning').classList.remove('hidden');
+}
+
+function nextWord(){
+  if(!level) return alert("Önce seviye seçiniz.");
+  wIdx++;
+  const words = vocabulary[level];
+  if(wIdx >= words.length) wIdx = 0;
+  showWord();
+}
+
+function showGrammar(){
+  if(!level) return;
+  document.getElementById('grammarContent').textContent = grammar[level] || "Gramer bilgisi yok.";
+}
+
+function showQuiz(){
+  if(!level) return;
+  const quizData = quizzes[level];
+  if(!quizData || quizData.length===0) {
+    document.getElementById('quizQuestion').textContent = "Quiz yok.";
+    document.getElementById('quizOptions').innerHTML = "";
+    return;
+  }
+  if(qIdx >= quizData.length) qIdx = 0;
+  const q = quizData[qIdx];
+  document.getElementById('quizQuestion').textContent = q.q;
+  const optionsDiv = document.getElementById('quizOptions');
+  optionsDiv.innerHTML = "";
+  q.options.forEach(opt=>{
+    const btn = document.createElement('div');
+    btn.className = "quiz-option";
+    btn.textContent = opt;
+    btn.onclick = () => checkAnswer(opt);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected){
+  if(!level) return;
+  const quizData = quizzes[level];
+  const correctAnswer = quizData[qIdx].answer;
+  if(selected === correctAnswer){
+    alert("Doğru!");
+    correct++;
+  } else {
+    alert("Yanlış! Doğru cevap: " + correctAnswer);
+    wrong++;
+  }
+  document.getElementById('correct').textContent = correct;
+  document.getElementById('wrong').textContent = wrong;
+}
+
+function nextQuiz(){
+  if(!level) return alert("Önce seviye seçiniz.");
+  qIdx++;
+  showQuiz();
+}
+
+</script>
+
+</body>
+</html>

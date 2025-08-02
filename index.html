@@ -1,358 +1,309 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Almanca Öğrenme Platformu Tek Dosya</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0; padding: 0;
-    background: #f9f9f9;
-    color: #222;
-  }
-  header {
-    background: #0052cc;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-  }
-  nav button {
-    background: transparent;
-    border: none;
-    color: white;
-    margin: 0 0.7rem;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  nav button:hover, nav button.active {
-    background: #003d99;
-    border-radius: 4px;
-  }
-  main {
-    padding: 1rem;
-  }
-  .hidden-section {
-    display: none;
-  }
-  .active-section {
-    display: block;
-  }
-  .flashcard {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
-  .flashcard p {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  button.primary-btn {
-    background: #0052cc;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin: 0.2rem;
-  }
-  button.primary-btn:hover {
-    background: #003d99;
-  }
-  .quiz-question {
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  .quiz-options button {
-    display: block;
-    width: 100%;
-    margin: 0.3rem 0;
-    padding: 0.5rem;
-    border-radius: 4px;
-    border: 1px solid #0052cc;
-    background: white;
-    cursor: pointer;
-  }
-  .quiz-options button.correct {
-    background-color: #4caf50;
-    color: white;
-  }
-  .quiz-options button.incorrect {
-    background-color: #f44336;
-    color: white;
-  }
-  select.level-select {
-    margin: 1rem auto;
-    display: block;
-    font-size: 1rem;
-    padding: 0.5rem;
-    max-width: 150px;
-    border-radius: 5px;
-    border: 1px solid #0052cc;
-  }
-  @media (max-width: 600px) {
-    nav button {
-      display: block;
-      margin: 0.5rem auto;
-      width: 90%;
+  <meta charset="UTF-8" />
+  <title>Almanca Öğrenme (A1-C1 Full Paket)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      margin: 0; padding: 20px;
+      color: #222;
     }
-  }
-</style>
+    h1,h2,h3 {
+      color: #00509e;
+    }
+    .container {
+      max-width: 900px;
+      background: white;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      margin: 5px 5px 10px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .quiz-option {
+      background: #e2e6ea;
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .quiz-option:hover {
+      background: #c7d1db;
+    }
+    .hidden {
+      display: none;
+    }
+    pre {
+      background: #f5f5f5;
+      border-left: 5px solid #007bff;
+      padding: 10px;
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.4;
+      border-radius: 4px;
+    }
+    .word-card {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 10px 0 6px 0;
+      color: #00509e;
+    }
+    .meaning {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #444;
+    }
+    .grammar-section {
+      margin-top: 10px;
+      line-height: 1.6;
+      font-size: 16px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>Almanca Öğrenme Platformu</h1>
-  <nav>
-    <button id="btn-vocabulary">Kelime Kartları</button>
-    <button id="btn-grammar">Dil Bilgisi</button>
-    <button id="btn-quiz">Quizler</button>
-    <button id="btn-progress">İlerleme</button>
-  </nav>
-  <select id="levelSelect" class="level-select" title="Seviye seçin">
-    <option value="A1">A1</option>
-    <option value="A2">A2</option>
-    <option value="B1">B1</option>
-    <option value="B2">B2</option>
-    <option value="C1">C1</option>
-    <option value="C2">C2</option>
-    <option value="C3">C3</option>
-  </select>
-</header>
-<main>
-  <section id="vocabulary" class="active-section"></section>
-  <section id="grammar" class="hidden-section"></section>
-  <section id="quiz" class="hidden-section"></section>
-  <section id="progress" class="hidden-section"></section>
-</main>
 
-<script>
-(() => {
-  // Veriler gömülü
-  const words = [
-    {level:"A1", german:"Haus", turkish:"Ev"},
-    {level:"A1", german:"Buch", turkish:"Kitap"},
-    {level:"A2", german:"Freund", turkish:"Arkadaş"},
-    {level:"B1", german:"Verantwortung", turkish:"Sorumluluk"},
-    {level:"B2", german:"Herausforderung", turkish:"Zorluk"},
-    {level:"C1", german:"Zuverlässigkeit", turkish:"Güvenilirlik"},
-    {level:"C2", german:"Widerspruch", turkish:"Çelişki"},
-    {level:"C3", german:"Selbstverwirklichung", turkish:"Kendini gerçekleştirme"}
-  ];
+<div class="container">
+  <h1>🇩🇪 Almanca Öğrenme (A1 - C1 Full Paket)</h1>
+  <h2>Seviyeni Seç</h2>
+  <button onclick="selectLevel('A1')">A1</button>
+  <button onclick="selectLevel('A2')">A2</button>
+  <button onclick="selectLevel('B1')">B1</button>
+  <button onclick="selectLevel('B2')">B2</button>
+  <button onclick="selectLevel('C1')">C1</button>
+  <p><strong>Seçilen Seviye: </strong><span id="level">—</span></p>
+</div>
 
-  const grammar = [
-    {level:"A1", title:"Artikel (Belirteçler)", content:"Almanca'da 'der', 'die', 'das' artikelleri cinsiyeti belirtir."},
-    {level:"B1", title:"Konjunktiv II (Şart Kipi)", content:"Konjunktiv II, şart cümlelerinde kullanılır ve varsayımsal durumları ifade eder."}
-  ];
-
-  const quizzes = [
-    {level:"A1", question:"Haus ne demek?", options:["Kitap","Ev","Araba","Kapı"], answer:"Ev"},
-    {level:"B1", question:"Konjunktiv II ne için kullanılır?", options:["Geçmiş zaman","Varsayımsal durumlar","Gelecek zaman","Olumsuzluk"], answer:"Varsayımsal durumlar"}
-  ];
-
-  // State
-  let currentSection = 'vocabulary';
-  let currentWordIndex = 0;
-  let currentQuizIndex = 0;
-  let selectedLevel = 'A1';
-
-  // DOM elemanları
-  const sections = {
-    vocabulary: document.getElementById('vocabulary'),
-    grammar: document.getElementById('grammar'),
-    quiz: document.getElementById('quiz'),
-    progress: document.getElementById('progress'),
-  };
-
-  // Bölüm gösterimi
-  function showSection(section) {
-    currentSection = section;
-    Object.keys(sections).forEach(sec => {
-      sections[sec].classList.add('hidden-section');
-      sections[sec].classList.remove('active-section');
-    });
-    sections[section].classList.remove('hidden-section');
-    sections[section].classList.add('active-section');
-    if(section === 'vocabulary') renderVocabulary();
-    else if(section === 'grammar') renderGrammar();
-    else if(section === 'quiz') renderQuiz();
-    else if(section === 'progress') renderProgress();
-  }
-
-  // Kelime kartları
-  function renderVocabulary() {
-    const vocSection = sections.vocabulary;
-    vocSection.innerHTML = '';
-
-    const levelWords = words.filter(w => w.level === selectedLevel);
-    if(levelWords.length === 0){
-      vocSection.innerHTML = '<p>Bu seviyede kelime bulunamadı.</p>';
-      return;
-    }
-    const wordObj = levelWords[currentWordIndex % levelWords.length];
-
-    const card = document.createElement('div');
-    card.className = 'flashcard';
-
-    const wordP = document.createElement('p');
-    wordP.textContent = wordObj.german;
-    card.appendChild(wordP);
-
-    const meaningP = document.createElement('p');
-    meaningP.textContent = wordObj.turkish;
-    meaningP.style.display = 'none';
-    card.appendChild(meaningP);
-
-    const showBtn = document.createElement('button');
-    showBtn.textContent = 'Anlamını Göster';
-    showBtn.className = 'primary-btn';
-    showBtn.onclick = () => {
-      meaningP.style.display = meaningP.style.display === 'none' ? 'block' : 'none';
-    };
-    card.appendChild(showBtn);
-
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent = 'Sonraki Kelime';
-    nextBtn.className = 'primary-btn';
-    nextBtn.onclick = () => {
-      currentWordIndex++;
-      renderVocabulary();
-    };
-    card.appendChild(nextBtn);
-
-    vocSection.appendChild(card);
-  }
-
-  // Dil bilgisi
-  function renderGrammar() {
-    const gramSection = sections.grammar;
-    gramSection.innerHTML = '';
-
-    const levelGrammar = grammar.filter(g => g.level === selectedLevel);
-    if(levelGrammar.length === 0){
-      gramSection.innerHTML = '<p>Bu seviyede dil bilgisi konusu bulunamadı.</p>';
-      return;
-    }
-
-    levelGrammar.forEach(g => {
-      const title = document.createElement('h3');
-      title.textContent = g.title;
-      const content = document.createElement('p');
-      content.textContent = g.content;
-      gramSection.appendChild(title);
-      gramSection.appendChild(content);
-    });
-  }
-
-  // Quiz
-  function renderQuiz()
-  <div id="flashcard">
-  <div id="word">Kelime</div>
+<div class="container">
+  <h2>🔤 Kelime Kartları</h2>
+  <div class="word-card" id="word">Kelime burada</div>
+  <div class="meaning hidden" id="meaning">Anlamı burada</div>
   <button onclick="showMeaning()">Anlamı Göster</button>
-  <div id="meaning" style="display:none;"></div>
+  <button onclick="nextWord()">Sonraki Kelime</button>
+</div>
+
+<div class="container">
+  <h2>📘 Gramer Bilgisi ve Örnek Cümleler</h2>
+  <div id="grammarContent" class="grammar-section">Seviye seçiniz, gramer burada görünecek.</div>
+</div>
+
+<div class="container">
+  <h2>🧠 Quiz</h2>
+  <p id="quizQuestion">Soru burada</p>
+  <div id="quizOptions"></div>
+  <p>✅ Doğru: <span id="correct">0</span> | ❌ Yanlış: <span id="wrong">0</span></p>
+  <button onclick="nextQuiz()">Sonraki Soru</button>
 </div>
 
 <script>
-const cards = [
-  { word: "Hello", meaning: "Merhaba" },
-  { word: "World", meaning: "Dünya" },
-  { word: "Book", meaning: "Kitap" },
-];
+let level = null;
+let wIdx = 0, qIdx = 0, correct = 0, wrong = 0;
 
-let currentIndex = 0;
+// Kelime verisi (her seviye için yaklaşık 30 kelime, toplam ~150+)
+const vocabulary = {
+  A1:[
+    {word:"sein", meaning:"olmak"},
+    {word:"haben", meaning:"sahip olmak"},
+    {word:"gehen", meaning:"gitmek"},
+    {word:"kommen", meaning:"gelmek"},
+    {word:"essen", meaning:"yemek"},
+    {word:"trinken", meaning:"içmek"},
+    {word:"Haus", meaning:"ev"},
+    {word:"Mann", meaning:"adam"},
+    {word:"Frau", meaning:"kadın"},
+    {word:"Kind", meaning:"çocuk"},
+    {word:"Buch", meaning:"kitap"},
+    {word:"Tisch", meaning:"masa"},
+    {word:"Stuhl", meaning:"sandalye"},
+    {word:"Auto", meaning:"araba"},
+    {word:"Tag", meaning:"gün"},
+    {word:"Wasser", meaning:"su"},
+    {word:"Freund", meaning:"arkadaş"},
+    {word:"lernen", meaning:"öğrenmek"},
+    {word:"sprechen", meaning:"konuşmak"},
+    {word:"lesen", meaning:"okumak"},
+    {word:"schreiben", meaning:"yazmak"},
+    {word:"schlafen", meaning:"uyumak"},
+    {word:"arbeiten", meaning:"çalışmak"},
+    {word:"spielen", meaning:"oynamak"},
+    {word:"laufen", meaning:"koşmak"},
+    {word:"sehen", meaning:"görmek"},
+    {word:"hören", meaning:"duymak"},
+    {word:"lieben", meaning:"sevmek"},
+    {word:"kalt", meaning:"soğuk"},
+    {word:"heiß", meaning:"sıcak"}
+  ],
+  A2:[
+    {word:"Bewerbung", meaning:"başvuru"},
+    {word:"Alltag", meaning:"günlük hayat"},
+    {word:"Freizeit", meaning:"boş zaman"},
+    {word:"Nachricht", meaning:"haber"},
+    {word:"Schule", meaning:"okul"},
+    {word:"Arbeit", meaning:"iş"},
+    {word:"Wetter", meaning:"hava"},
+    {word:"Reise", meaning:"seyahat"},
+    {word:"Frühstück", meaning:"kahvaltı"},
+    {word:"Mittagessen", meaning:"öğle yemeği"},
+    {word:"Abendessen", meaning:"akşam yemeği"},
+    {word:"Kleid", meaning:"elbise"},
+    {word:"Schwester", meaning:"kız kardeş"},
+    {word:"Bruder", meaning:"erkek kardeş"},
+    {word:"Zug", meaning:"tren"},
+    {word:"Flugzeug", meaning:"uçak"},
+    {word:"Familie", meaning:"aile"},
+    {word:"Gesundheit", meaning:"sağlık"},
+    {word:"Hausaufgaben", meaning:"ödev"},
+    {word:"Spaziergang", meaning:"yürüyüş"},
+    {word:"Tanzt", meaning:"dans ediyor"},
+    {word:"singen", meaning:"şarkı söylemek"},
+    {word:"beginnen", meaning:"başlamak"},
+    {word:"entscheiden", meaning:"karar vermek"},
+    {word:"vergessen", meaning:"unutmak"},
+    {word:"verlieren", meaning:"kaybetmek"},
+    {word:"gewinnen", meaning:"kazanmak"},
+    {word:"warten", meaning:"beklemek"},
+    {word:"arbeiten", meaning:"çalışmak"},
+    {word:"helfen", meaning:"yardım etmek"}
+  ],
+  B1:[
+    {word:"Verantwortung", meaning:"sorumluluk"},
+    {word:"Entscheidung", meaning:"karar"},
+    {word:"Gesellschaft", meaning:"toplum"},
+    {word:"Umwelt", meaning:"çevre"},
+    {word:"Kultur", meaning:"kültür"},
+    {word:"Technologie", meaning:"teknoloji"},
+    {word:"Politik", meaning:"politika"},
+    {word:"Wirtschaft", meaning:"ekonomi"},
+    {word:"Medien", meaning:"medya"},
+    {word:"Bildung", meaning:"eğitim"},
+    {word:"Forschung", meaning:"araştırma"},
+    {word:"Meinung", meaning:"fikir"},
+    {word:"Kommunikation", meaning:"iletişim"},
+    {word:"Entwicklung", meaning:"gelişim"},
+    {word:"Erfahrung", meaning:"deneyim"},
+    {word:"Herausforderung", meaning:"zorluk"},
+    {word:"Veränderung", meaning:"değişim"},
+    {word:"Integration", meaning:"entegrasyon"},
+    {word:"Lebensqualität", meaning:"yaşam kalitesi"},
+    {word:"Nachhaltigkeit", meaning:"sürdürülebilirlik"},
+    {word:"Arbeitnehmer", meaning:"işçi"},
+    {word:"Arbeitgeber", meaning:"işveren"},
+    {word:"Gleichberechtigung", meaning:"eşitlik"},
+    {word:"Freiwillige", meaning:"gönüllü"},
+    {word:"Gesetz", meaning:"kanun"},
+    {word:"Vertrag", meaning:"sözleşme"},
+    {word:"Staat", meaning:"devlet"},
+    {word:"Demokratie", meaning:"demokrasi"},
+    {word:"Recht", meaning:"hak"},
+    {word:"Verantwortlich", meaning:"sorumlu"}
+  ],
+  B2:[
+    {word:"Erfahrung", meaning:"deneyim"},
+    {word:"Möglichkeit", meaning:"olanak"},
+    {word:"Verhalten", meaning:"davranış"},
+    {word:"Herausforderung", meaning:"meydan okuma"},
+    {word:"Konsequenz", meaning:"sonuç"},
+    {word:"Verantwortung", meaning:"sorumluluk"},
+    {word:"Beziehung", meaning:"ilişki"},
+    {word:"Forschung", meaning:"araştırma"},
+    {word:"Gesellschaft", meaning:"toplum"},
+    {word:"Leistung", meaning:"performans"},
+    {word:"Politik", meaning:"politika"},
+    {word:"Technologie", meaning:"teknoloji"},
+    {word:"Innovation", meaning:"yenilik"},
+    {word:"Management", meaning:"yönetim"},
+    {word:"Motivation", meaning:"motivasyon"},
+    {word:"Kommunikation", meaning:"iletişim"},
+    {word:"Analyse", meaning:"analiz"},
+    {word:"Verhandlung", meaning:"müzakere"},
+    {word:"Ziel", meaning:"hedef"},
+    {word:"Strategie", meaning:"strateji"},
+    {word:"Entwicklung", meaning:"gelişim"},
+    {word:"Planung", meaning:"planlama"},
+    {word:"Umsetzung", meaning:"uygulama"},
+    {word:"Kritik", meaning:"eleştiri"},
+    {word:"Vertrauen", meaning:"güven"},
+    {word:"Qualität", meaning:"kalite"},
+    {word:"Risiko", meaning:"risk"},
+    {word:"Effizienz", meaning:"verimlilik"},
+    {word:"Kapazität", meaning:"kapasite"},
+    {word:"Flexibilität", meaning:"esneklik"}
+  ],
+  C1:[
+    {word:"Nachhaltigkeit", meaning:"sürdürülebilirlik"},
+    {word:"Perspektive", meaning:"bakış açısı"},
+    {word:"Selbstverwirklichung", meaning:"kendini gerçekleştirme"},
+    {word:"Bewusstseinswandel", meaning:"bilinç değişimi"},
+    {word:"Freiwilligkeit", meaning:"gönüllülük"},
+    {word:"Komplexität", meaning:"karmaşıklık"},
+    {word:"Aussage", meaning:"ifadeler"},
+    {word:"Hypothese", meaning:"varsayım"},
+    {word:"Argumentation", meaning:"argümantasyon"},
+    {word:"Kausalität", meaning:"nedensellik"},
+    {word:"Präferenz", meaning:"tercih"},
+    {word:"Diskurs", meaning:"tartışma"},
+    {word:"Konsens", meaning:"uzlaşma"},
+    {word:"Korrelation", meaning:"korelasyon"},
+    {word:"Transformation", meaning:"dönüşüm"},
+    {word:"Relevanz", meaning:"önem"},
+    {word:"Evaluation", meaning:"değerlendirme"},
+    {word:"Forschungsergebnis", meaning:"araştırma sonucu"},
+    {word:"Innovation", meaning:"yenilik"},
+    {word:"Interdisziplinär", meaning:"disiplinlerarası"},
+    {word:"Methodologie", meaning:"yöntembilim"},
+    {word:"Paradigma", meaning:"paradigma"},
+    {word:"Synthetisieren", meaning:"birleştirmek"},
+    {word:"Validierung", meaning:"geçerlilik"},
+    {word:"Evidenz", meaning:"kanıt"},
+    {word:"Reflexion", meaning:"yansıma"},
+    {word:"Argument", meaning:"argüman"},
+    {word:"Interpretation", meaning:"yorumlama"},
+    {word:"Erkenntnis", meaning:"bilgi"}
+  ]
+};
 
-function showCard(index) {
-  document.getElementById('word').innerText = cards[index].word;
-  document.getElementById('meaning').style.display = 'none';
-  document.getElementById('meaning').innerText = cards[index].meaning;
-}
-
-function showMeaning() {
-  document.getElementById('meaning').style.display = 'block';
-}
-
-function nextCard() {
-  currentIndex = (currentIndex + 1) % cards.length;
-  showCard(currentIndex);
-}
-
-showCard(currentIndex);
-</script>
-
-<button onclick="nextCard()">Sonraki Kart</button>
-<div id="quiz">
-  <div id="question"></div>
-  <div id="answers"></div>
-  <button onclick="nextQuestion()">Sonraki Soru</button>
-</div>
-
-<script>
-const quizData = [
-  {
-    question: "What is the past tense of 'go'?",
-    options: ["goed", "went", "gone", "goes"],
-    answer: "went"
-  },
-  {
-    question: "Which one is a noun?",
-    options: ["quickly", "happiness", "run", "blue"],
-    answer: "happiness"
-  }
-];
-
-let qIndex = 0;
-
-function showQuestion(index) {
-  const q = quizData[index];
-  document.getElementById('question').innerText = q.question;
-  const answersDiv = document.getElementById('answers');
-  answersDiv.innerHTML = "";
-  q.options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.innerText = opt;
-    btn.onclick = () => checkAnswer(opt);
-    answersDiv.appendChild(btn);
-  });
-}
-
-function checkAnswer(selected) {
-  if(selected === quizData[qIndex].answer) {
-    alert("Doğru!");
-  } else {
-    alert("Yanlış!");
-  }
-}
-
-function nextQuestion() {
-  qIndex = (qIndex + 1) % quizData.length;
-  showQuestion(qIndex);
-}
-
-showQuestion(qIndex);
-    </script>
-    function checkAnswer(selected) {
-  if(selected === quizData[qIndex].answer) {
-    alert("Doğru!");
-    let score = localStorage.getItem('score') || 0;
-    localStorage.setItem('score', Number(score) + 1);
-  } else {
-    alert("Yanlış!");
-  }
-}
-  <div>Doğru Sayısı: <span id="score"></span></div>
-
-<script>
-function updateScore() {
-  let score = localStorage.getItem('score') || 0;
-  document.getElementById('score').innerText = score;
-}
-
-updateScore();
-</script>
+// Quiz verisi (kelimelere göre)
+const quizzes = {
+  A1:[
+    {q:"‘sein’ ne demektir?", options:["gitmek","olmak","yemek","çalışmak"], answer:"olmak"},
+    {q:"‘haben’ anlamı nedir?", options:["sahip olmak","gelmek","koşmak","dinlemek"], answer:"sahip olmak"},
+    {q:"‘Haus’ kelimesi ne demek?", options:["ev","araba","masa","kitap"], answer:"ev"},
+    {q:"‘Kind’ kelimesi hangi anlama gelir?", options:["çocuk","adam","kadın","öğrenci"], answer:"çocuk"},
+    {q:"‘sprechen’ fiilinin anlamı nedir?", options:["konuşmak","yazmak","okumak","çalışmak"], answer:"konuşmak"}
+  ],
+  A2:[
+    {q:"‘Freizeit’ ne demektir?", options:["sorumluluk","boş zaman","iş","eğitim"], answer:"boş zaman"},
+    {q:"‘Arbeit’ kelimesi ne anlama gelir?", options:["iş","ev","okul","seyahat"], answer:"iş"},
+    {q:"‘Zug’ kelimesi hangi anlama sahiptir?", options:["tren","uçak","araba","gemi"], answer:"tren"},
+    {q:"‘Familie’ kelimesi ne demektir?", options:["aile","arkadaş","komşu","çocuk"], answer:"aile"},
+    {q:"‘helfen’ fiilinin anlamı nedir?", options:["yardım etmek","kaybetmek","bulmak","çalışmak"], answer:"yardım etmek"}
+  ],
+  B1:[
+    {q:"‘Verantwortung’ ne anlama gelir?", options:["sorumluluk","bağlantı","eğitim","arkadaş"], answer:"sorumluluk"},
+    {q:"‘Politik’ kelimesi ne demektir?", options:["politika","kültür","ekonomi","teknoloji"], answer:"politika"},
+    {q:"‘Medien’ kelimesi ne anlama gelir?", options:["medya","araştırma","iletişim","hukuk"], answer:"medya"},
+    {q:"‘Bildung’ kelimesinin anlamı nedir?", options:["eğitim","toplum","kanun","devlet"], answer:"eğitim"},
+    {q:"‘Gesetz’ kelimesi hangi anlama gelir?", options:["kanun","yönetim","hak","ödev"], answer:"kanun"}
+  ],
+  B2:[
+    {q:"‘Erfahrung’ kelimesi ne anlama gelir?", options:["deneyim","performans","iletişim","strateji"], answer:"deneyim"},
+    {q:"‘Management’ kelimesi hangi anlama sahiptir?", options:["yönetim","yenilik","motivasyon","teknoloji"], answer:"yönetim"},
+    {q:"‘Analyse’ kelimesi ne demektir?", options:["analiz","eleştiri","risk","verimlilik"], answer:"analiz"},
+    {q:"‘Ziel’ kelimesinin anlamı nedir?", options:["hedef","kalite","güven","planlama"], answer:"hedef"},
+    {q:"‘
